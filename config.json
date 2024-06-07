@@ -1,0 +1,4 @@
+{
+    "PostgresUserServer" : "testuser",
+    "PostgresUserServerPassword" : "testpwd"
+}
