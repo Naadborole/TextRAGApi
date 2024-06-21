@@ -51,6 +51,25 @@ func DoesIndexExists(id string) bool {
 	if err != nil {
 		log.Fatal((err))
 	}
-	fmt.Println(answer)
 	return answer
+}
+
+func AddIndex(i models.Index) (bool, error) {
+	_, err := ConnPool.Exec(context.Background(), "INSERT INTO index VALUES($1, $2, $3)", i.Id, i.Name, i.NDocuments)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
+func GetIndex(id string) (models.Index, error) {
+	rows, err := ConnPool.Query(context.Background(), "SELECT * FROM index WHERE id = $1", id)
+	if err != nil {
+		return models.Index{}, err
+	}
+	ind, err := pgx.CollectOneRow(rows, pgx.RowToStructByPos[models.Index])
+	if err != nil {
+		return models.Index{}, err
+	}
+	return ind, nil
 }

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"github.com/Naadborole/TextRAGApi/models"
 	"net/http"
 
 	"github.com/Naadborole/TextRAGApi/database"
@@ -10,13 +10,35 @@ import (
 )
 
 func main() {
-	fmt.Println(database.GetIndexList())
-	database.DoesIndexExists("2")
 	server := gin.Default()
-	server.GET("/index", getIndex)
+	server.GET("/index/:id", getIndex)
+	server.GET("/indexList", getIndexList)
+	server.POST("/index", postIndex)
 	server.Run()
 }
 
 func getIndex(context *gin.Context) {
-	context.JSON(http.StatusOK, gin.H{"message": "Request received"})
+	id := context.Param("id")
+	index, err := database.GetIndex(id)
+	if err != nil {
+		context.JSON(http.StatusNotFound, gin.H{"message": "Index not found"})
+		return
+	}
+	context.JSON(http.StatusFound, index)
+}
+
+func getIndexList(context *gin.Context) {
+	context.JSON(http.StatusOK, database.GetIndexList())
+}
+
+func postIndex(context *gin.Context) {
+	var index models.Index
+	if err := context.ShouldBindJSON(&index); err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+	}
+	status, err := database.AddIndex(index)
+	if err != nil || status == false {
+		context.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+	}
+	context.JSON(http.StatusCreated, index)
 }
