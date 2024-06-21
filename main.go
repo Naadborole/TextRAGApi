@@ -11,6 +11,7 @@ import (
 
 func main() {
 	fmt.Println(database.GetIndexList())
+	database.DoesIndexExists("2")
 	server := gin.Default()
 	server.GET("/index", getIndex)
 	server.Run()

@@ -44,3 +44,13 @@ func GetIndexList() []models.Index {
 	}
 	return indexes
 }
+
+func DoesIndexExists(id string) bool {
+	var answer bool
+	err := ConnPool.QueryRow(context.Background(), "SELECT EXISTS(SELECT id FROM index where id = $1)", id).Scan(&answer)
+	if err != nil {
+		log.Fatal((err))
+	}
+	fmt.Println(answer)
+	return answer
+}
