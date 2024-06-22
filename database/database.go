@@ -29,7 +29,7 @@ func initDB() *pgxpool.Pool {
 }
 
 func initializeSchema() {
-	_, err := ConnPool.Exec(context.Background(), "CREATE TABLE IF NOT EXISTS index (id VARCHAR(255), name VARCHAR(255), nDocuments INT)")
+	_, err := ConnPool.Exec(context.Background(), "CREATE TABLE IF NOT EXISTS index (id VARCHAR(255) PRIMARY KEY, name VARCHAR(255), nDocuments INT)")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to create index table")
 	}
@@ -37,7 +37,7 @@ func initializeSchema() {
 }
 
 func GetIndexList() []models.Index {
-	rows, _ := ConnPool.Query(context.Background(), "SELECT * FROM index")
+	rows, _ := ConnPool.Query(context.Background(), "SELECT * FROM index ORDER BY id")
 	indexes, err := pgx.CollectRows(rows, pgx.RowToStructByPos[models.Index])
 	if err != nil {
 		log.Fatal(err)

@@ -35,10 +35,12 @@ func postIndex(context *gin.Context) {
 	var index models.Index
 	if err := context.ShouldBindJSON(&index); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
 	}
 	status, err := database.AddIndex(index)
 	if err != nil || status == false {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		return
 	}
 	context.JSON(http.StatusCreated, index)
 }
