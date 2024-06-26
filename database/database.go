@@ -29,11 +29,20 @@ func initDB() *pgxpool.Pool {
 }
 
 func initializeSchema() {
-	_, err := ConnPool.Exec(context.Background(), "CREATE TABLE IF NOT EXISTS index (id VARCHAR(255) PRIMARY KEY, name VARCHAR(255), nDocuments INT)")
+
+	_, err := ConnPool.Exec(context.Background(), "CREATE EXTENSION vector")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to create index table")
 	}
-	// _, err := ConnPool.Exec(context.Background(), "")
+
+	_, err = ConnPool.Exec(context.Background(), "CREATE TABLE IF NOT EXISTS index (id VARCHAR(255) PRIMARY KEY, name VARCHAR(255), nDocuments INT)")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Failed to create index table")
+	}
+	// _, err = ConnPool.Exec(context.Background(), "CREATE EXTENSION vector")
+	// if err != nil {
+	// 	fmt.Fprintf(os.Stderr, "Failed to create index table")
+	// }
 }
 
 func GetIndexList() []models.Index {
