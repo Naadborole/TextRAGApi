@@ -15,11 +15,11 @@ var ConnPool *pgxpool.Pool
 
 func init() {
 	ConnPool = initDB()
-	initializeSchema()
+	//initializeSchema()
 }
 
 func initDB() *pgxpool.Pool {
-	ConnPool, err := pgxpool.New(context.Background(), os.Getenv("DATABASE_URL"))
+	ConnPool, err := pgxpool.New(context.Background(), os.Getenv("POSTGRES_URL"))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
 		os.Exit(1)
