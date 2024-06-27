@@ -21,11 +21,12 @@ func init() {
 
 	Store, err := pgvector.New(
 		context.Background(),
-		pgvector.WithConnectionURL("postgres://testuser:testpass@localhost:5432/testdb?sslmode=disable"),
+		pgvector.WithConnectionURL(os.Getenv("POSTGRES_URL")),
 		pgvector.WithEmbedder(e),
+		pgvector.WithCollectionName("DocumentStore"),
 	)
 	if err != nil {
 		log.Fatal("Cannot create vector store")
 	}
-	Store.DropTables(context.Background())
+	_ = Store
 }
