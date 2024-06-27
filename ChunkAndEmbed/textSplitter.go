@@ -1,4 +1,4 @@
-package textsplitter
+package chunkandembed
 
 import (
 	"github.com/tmc/langchaingo/schema"
