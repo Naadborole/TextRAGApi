@@ -1,4 +1,4 @@
-package textsplitter
+package chunkandembed
 
 import (
 	"bytes"
@@ -37,7 +37,7 @@ func newGeminiEmbeddingRequestBody(text string) GeminiEmbeddingRequestBody {
 	return postBody
 }
 
-func (e GeminiEmbedder) CreateEmbedding(ctx context.Context, texts []string) ([][]float32, error) {
+func (e GeminiEmbedder) EmbedDocuments(ctx context.Context, texts []string) ([][]float32, error) {
 
 	var embeddings [][]float32
 	for _, text := range texts {
@@ -68,4 +68,32 @@ func (e GeminiEmbedder) CreateEmbedding(ctx context.Context, texts []string) ([]
 		embeddings = append(embeddings, response.Embedding.Values)
 	}
 	return embeddings, nil
+}
+
+func (e GeminiEmbedder) EmbedQuery(ctx context.Context, text string) ([]float32, error) {
+	postBody := newGeminiEmbeddingRequestBody(text)
+
+	jsonRequestBody, err := json.Marshal(postBody)
+	if err != nil {
+		return nil, err
+	}
+
+	url := fmt.Sprintf("https://generativelanguage.googleapis.com/v1beta/models/embedding-001:embedContent?key=%s", e.apiKey)
+	resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonRequestBody))
+
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	var response GeminiResponse
+	err = json.Unmarshal(body, &response)
+	if err != nil {
+		return nil, err
+	}
+	return response.Embedding.Values, nil
 }
