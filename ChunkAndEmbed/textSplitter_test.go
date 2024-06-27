@@ -19,6 +19,9 @@ Once companies get familiar with RAG, they can combine a variety of off-the-shel
 RAG doesn't require a data center. LLMs are debuting on Windows PCs, thanks to NVIDIA software that enables all sorts of applications users can access even on their laptops.`
 	texts := make([]string, 1)
 	texts[0] = txt
-	fmt.Println(SplitText(texts, make([]map[string]any, 0)))
+	var metadatas []map[string]any = make([]map[string]any, 0)
+	metadatas = append(metadatas, make(map[string]any))
+	metadatas[0]["source"] = "nvidia-blog"
+	fmt.Println(SplitText(texts, metadatas))
 
 }

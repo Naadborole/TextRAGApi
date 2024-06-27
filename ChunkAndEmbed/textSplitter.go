@@ -6,5 +6,5 @@ import (
 )
 
 func SplitText(texts []string, metadatas []map[string]any) ([]schema.Document, error) {
-	return textsplitter.CreateDocuments(textsplitter.NewRecursiveCharacter(textsplitter.WithChunkSize(100)), texts, metadatas)
+	return textsplitter.CreateDocuments(textsplitter.NewRecursiveCharacter(textsplitter.WithChunkSize(500)), texts, metadatas)
 }
