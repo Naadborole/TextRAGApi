@@ -80,4 +80,5 @@ func postQueryChat(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusAccepted, generatechat.GetResponse(reqBody.Text))
+	fmt.Println(generatechat.RAGChain.GetMemory())
 }
