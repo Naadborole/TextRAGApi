@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	chunkandembed "github.com/Naadborole/TextRAGApi/ChunkAndEmbed"
+	generatechat "github.com/Naadborole/TextRAGApi/GenerateChat"
 	"github.com/Naadborole/TextRAGApi/models"
 	"github.com/google/uuid"
 
@@ -22,7 +23,8 @@ func main() {
 	server.POST("/index", postIndex)
 	server.POST("/upload", postUpload)
 	server.POST("/embedAndStore", postEmbed)
-	server.POST("/query", postQuery)
+	server.POST("/queryDoc", postQueryDoc)
+	server.POST("/queryChat", postQueryChat)
 	server.Run()
 }
 
@@ -87,7 +89,7 @@ func postEmbed(c *gin.Context) {
 	c.JSON(http.StatusAccepted, gin.H{"ID": idString})
 }
 
-func postQuery(c *gin.Context) {
+func postQueryDoc(c *gin.Context) {
 	var reqBody struct {
 		Text string `json:"text"`
 	}
@@ -101,4 +103,15 @@ func postQuery(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusFound, docs)
+}
+
+func postQueryChat(c *gin.Context) {
+	var reqBody struct {
+		Text string `json:"text"`
+	}
+	if err := c.ShouldBindJSON(&reqBody); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+	c.JSON(http.StatusAccepted, generatechat.GetResponse(reqBody.Text))
 }

@@ -5,12 +5,12 @@ import (
 	"os"
 )
 
-func getConfigValue(key string) (string, error) {
-	configFile, err := os.ReadFile("../config.json")
+func GetConfigValue(key string) string {
+	configFile, err := os.ReadFile("./config/config.json")
 	if err != nil {
-		return "", err
+		panic(err)
 	}
 	var config map[string]string
 	json.Unmarshal(configFile, &config)
-	return config[key], nil
+	return config[key]
 }
