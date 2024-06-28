@@ -16,7 +16,7 @@ var RAGChain chains.ConversationalRetrievalQA
 
 func init() {
 	var err error
-	Llm, err = googleai.New(context.Background(), googleai.WithAPIKey(config.GetConfigValue("API_KEY")))
+	Llm, err = googleai.New(context.Background(), googleai.WithAPIKey(config.GetConfigValue("GEMINI_API_KEY")))
 	if err != nil {
 		panic(err)
 	}
