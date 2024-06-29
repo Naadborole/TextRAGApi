@@ -73,12 +73,17 @@ func postQueryDoc(c *gin.Context) {
 
 func postQueryChat(c *gin.Context) {
 	var reqBody struct {
-		Text string `json:"text"`
+		Text string `json:"query"`
 	}
 	if err := c.ShouldBindJSON(&reqBody); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 	c.JSON(http.StatusAccepted, generatechat.GetResponse(reqBody.Text))
-	fmt.Println(generatechat.RAGChain.GetMemory())
+	//_ = generatechat.GetResponse(reqBody.Text)
+	//mem, err := generatechat.RAGChain.GetMemory().LoadMemoryVariables(context.Background(), make(map[string]any))
+	//if err != nil {
+	//	c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+	//}
+	//c.JSON(http.StatusAccepted, mem)
 }

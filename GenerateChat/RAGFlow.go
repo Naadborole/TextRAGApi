@@ -71,7 +71,8 @@ func initializeAlternateFlow(llm llms.Model) {
 	CustomRAGTemplateChain := chains.NewLLMChain(llm, prompts.NewPromptTemplate(template, []string{"context", "question"}))
 	// CustomRAGTemplateChain.OutputKey = "answer"
 	stuffDocChain := chains.NewStuffDocuments(CustomRAGTemplateChain)
+	chatHist := memory.NewChatMessageHistory()
 	RAGChain = chains.NewConversationalRetrievalQA(stuffDocChain, chains.LoadCondenseQuestionGenerator(llm),
-		vectorstores.ToRetriever(chunkandembed.Store, 3), memory.NewConversationBuffer())
+		vectorstores.ToRetriever(chunkandembed.Store, 3), memory.NewConversationBuffer(memory.WithReturnMessages(true), memory.WithChatHistory(chatHist)))
 
 }
